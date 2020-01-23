@@ -1,0 +1,12 @@
+[
+    {
+        "ParameterKey": "RoleName",
+        "ParameterValue": "iam-role-manager-lambda-role",
+        "UsePreviousValue": false
+    },
+    {
+        "ParameterKey": "RoleDescription",
+        "ParameterValue": "IAM Role for basic lambda",
+        "UsePreviousValue": false
+    }
+]

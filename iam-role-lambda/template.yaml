@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  RoleName:
+    Type: String
+  RoleDescription:
+    Type: String
+Resources:
+  BasicLambdaRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      Description: !Ref RoleDescription
+      AssumeRolePolicyDocument: 
+        Version: '2012-10-17'
+        Statement: 
+          - 
+            Effect: Allow
+            Principal: 
+              Service: 
+                - lambda.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      Path: /
+      RoleName: !Ref RoleName
+  UseDynamoPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: use-dynamo-policy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action: 
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:BatchGetItem
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: '*'
+      Roles:
+      - !Ref BasicLambdaRole
+  SnsPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: sns-policy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action: 
+            - sns:Publish
+          Resource: '*'
+      Roles:
+      - !Ref BasicLambdaRole
+  CloudWatchLogPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: cloudwatch-log-policy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action: 
+            - logs:*
+            - cloudwatch:*
+          Resource: '*'
+      Roles:
+      - !Ref BasicLambdaRole
+Outputs:
+  StackName:
+    Value: !Ref AWS::StackName
+  StackID:
+    Value: !Ref AWS::StackId
